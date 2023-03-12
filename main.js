@@ -24,10 +24,11 @@ function highlightSentence(currentDom) {
 function toggleCurrentAndNextSentence() {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
+  const currentTextSelection = currentRange.toString()
 
   // Track the begining and end of each sentence in paragraph.
   const currentParagraph = currentRange.startContainer.parentNode;
-  const allSentences = currentParagraph.textContent.split(/(?<=\.|\?|\!)\s/g)
+  const allSentences = splitParagraphBySentences(currentParagraph.textContent)
   const allSentencesObjs = []
   var startIndex = 0
   for (let i = 0; i < allSentences.length; i++) {
@@ -41,7 +42,7 @@ function toggleCurrentAndNextSentence() {
   const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
   var nextSentence
   // Case - Only fragment of sentence selected. Select the entire sentence.
-  if (currSentenceObj.sentence.length + MAX_LETTERS_MISSING_SELECTED_SENTENCE > currentRange.toString().trim()) {
+  if (currSentenceObj.sentence.length > currentTextSelection.length + MAX_LETTERS_MISSING_SELECTED_SENTENCE) {
     nextSentence = currSentenceObj
   } else { // Case - select next sentence 
     nxtSentenceIdx = allSentencesObjs.indexOf(currSentenceObj) + 1
@@ -76,6 +77,35 @@ function findCorrespondingSentence(allSentencesObjs, currentRange) {
   return undefined
 }
 
+function splitParagraphBySentences(paragraph) {
+  const sentences = [];
+  let start = 0;
+  let end = 0;
+
+  // Loop through each character in the paragraph
+  for (let i = 0; i < paragraph.length; i++) {
+    const char = paragraph.charAt(i);
+
+    // If the character is a period, exclamation point, or question mark,
+    // add the sentence to the array and move the start index to the next character
+    if (char === '.' || char === '!' || char === '?') {
+      end = i;
+      sentences.push(paragraph.slice(start, end + 1));
+      start = i + 1;
+    }
+  }
+
+  // If there's a sentence that ends with the last character of the paragraph,
+  // add it to the array as well
+  if (start < paragraph.length) {
+    sentences.push(paragraph.slice(start));
+  }
+
+  // Return the array of sentences
+  return sentences;
+}
+
+// Disable default space scrolling down the screen
 document.addEventListener('keydown', function(event) {
   if (event.code === 'Space') {
     event.preventDefault();
