@@ -112,6 +112,12 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   nextRange.setStart(currentParagraph.firstChild, nextSentence.startOffset);
   nextRange.setEnd(currentParagraph.firstChild, nextSentence.endOffset);
 
+  // scroll the screen down
+  currentParagraph.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+
   // select the new range
   currentSelection.removeAllRanges();
   currentSelection.addRange(nextRange);
