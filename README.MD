@@ -4,7 +4,7 @@ Are you tired of scrolling through long digital documents or books and losing tr
 
 We have a solution for you. Our team has developed a **feature that selects and highlights the current sentence being read** as a visual cue for readers. This feature enhances the reading experience by providing clear cues on the sentence you are currently reading, helping you to maintain focus and engagement with the content.
 
-# Video Demo
+## Video Demo
 
 To see our feature in action and understand its benefits more clearly, we invite you to watch our video demo. In this demonstration, we showcase how the sentence selection and highlighting feature works, and how it can greatly enhance your digital reading experience.
 
@@ -13,6 +13,28 @@ By clicking on the image above or following this link, you can access our video 
 ## Usage
 
 Our feature is easy to use and seamlessly integrates with existing web applications. Simply highlight a word or sentence on an article, and press **space bar** and our feature will determine the current sentence being read using the cursor position and surrounding text. The selected sentence will be highlighted in real-time as you scroll through the document.
+
+## Importing the Reading Assist Extension via "Load Unpacked"
+
+This section explains how to import and test the Reading Assist extension from [https://github.com/llj0824/readingAssist](https://github.com/llj0824/readingAssist) in your browser using the "Load unpacked" option.
+
+### Step 1: Download the Code
+
+1. Visit [https://github.com/llj0824/readingAssist](https://github.com/llj0824/readingAssist).
+2. Click the green "Code" button.
+3. In the dropdown menu, choose "Download ZIP".
+4. Extract the contents of the downloaded ZIP file to a folder on your computer.
+
+### Step 2: Load the Extension in Chrome
+
+1. Open Google Chrome and go to `chrome://extensions/`.
+2. Enable "Developer mode" using the toggle at the top-right corner of the page.
+3. Click "Load unpacked" and select the folder containing the extracted files from Step 1.
+4. The Reading Assist extension should now be installed and appear in the list of extensions.
+
+After completing these steps, you'll see the Reading Assist extension icon in the toolbar. You can click the icon to access its popup and interact with it while browsing websites.
+
+To uninstall or disable the extension, visit `chrome://extensions/`, find the Reading Assist extension, and either click "Remove" to uninstall or toggle off the switch to disable it temporarily.
 
 ## Improved Accessibility
 
