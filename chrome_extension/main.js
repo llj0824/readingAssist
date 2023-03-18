@@ -12,7 +12,7 @@ function highlightSentence(currentDom) {
   const currentParagraph = currentRange.startContainer.parentNode;
   // case 1: initial load - nothing is selected
   const isTextSelected = window.getSelection().type !== "None"
-  if (currentDom == undefined && !isTextSelected) {
+  if (!isTextSelected) {
     return
   }
 
@@ -166,14 +166,20 @@ function splitParagraphBySentences(paragraph) {
 
 // Disable default space scrolling down the screen
 document.addEventListener('keydown', function(event) {
-  if (event.code === 'Space') {
+  const isTyping = document.activeElement.tagName === 'INPUT' ||
+    document.activeElement.tagName === 'TEXTAREA';
+
+  if (event.code === 'Space' && !isTyping) {
     event.preventDefault();
   }
 });
 
 // Disable default space scrolling down the screen
 document.addEventListener('keyup', function(event) {
-  if (event.code === 'Space') {
+  const isTyping = document.activeElement.tagName === 'INPUT' ||
+    document.activeElement.tagName === 'TEXTAREA';
+
+  if (event.code === 'Space' && !isTyping) {
     highlightSentence();
   }
 });
