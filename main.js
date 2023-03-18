@@ -7,26 +7,30 @@ function sentenceObject(startOffset, endOffset, sentence) {
 }
 
 function highlightSentence(currentDom) {
+  const currentSelection = window.getSelection();
+  const currentRange = currentSelection.getRangeAt(0);
+  const currentParagraph = currentRange.startContainer.parentNode;
   // case 1: initial load - nothing is selected
-  // case 2: end of search
   const isTextSelected = window.getSelection().type !== "None"
   if (currentDom == undefined && !isTextSelected) {
     return
   }
 
-  // case 3: moving to next paragraph
+  // case 2: moving to next paragraph
+  if (isEndOfParagraph()) {
+    console.log("Going to next paragraph")
+    return nextParagraph()
+  }
 
-  // case 4 - main loop 
-  toggleCurrentAndNextSentence()
+  // case 3 - increment to next sentence 
+  console.log("Incrementing current sentence")
+  var isNewParagraphNode = false
+  highlightNextSentence(currentParagraph, isNewParagraphNode)
 }
 
-// spacebar moves selects next sentence 
-function toggleCurrentAndNextSentence() {
+function isEndOfParagraph() {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
-  const currentTextSelection = currentRange.toString()
-
-  // Track the begining and end of each sentence in paragraph.
   const currentParagraph = currentRange.startContainer.parentNode;
   const allSentences = splitParagraphBySentences(currentParagraph.textContent)
   const allSentencesObjs = []
@@ -40,11 +44,59 @@ function toggleCurrentAndNextSentence() {
 
   // Get current & next sentence details
   const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
+  const isLastSentence = (currSentenceObj === allSentencesObjs[allSentencesObjs.length - 1])
+  return isLastSentence
+}
+
+function nextParagraph() {
+  // gets currentSelection, loops till next <p> tag, selects first sentence of that tag
+  const currentSelection = window.getSelection();
+  const currentRange = currentSelection.getRangeAt(0);
+  const currentTextSelection = currentRange.toString();
+
+  // Keep transversing for next paragraph. Until no more
+  var nextElement = currentSelection.baseNode.parentNode.nextSibling
+  while (nextElement) {
+    var isParagraphNode = nextElement?.localName === 'p'
+    if (isParagraphNode) {
+      // update current selection to be this node 
+      var isNewParagraph = true
+      return highlightNextSentence(nextElement, isNewParagraph)
+    }
+    nextElement = nextElement.nextSibling
+  }
+  // reaching here means no more paragraph nodes
+  console.log("No more paragraph nodes. Returning...")
+  return
+}
+
+// Given a paragraph html text node, selects the next sentence.
+function highlightNextSentence(currentParagraph, isNewParagraphNode) {
+  const currentSelection = window.getSelection();
+  const currentRange = currentSelection.getRangeAt(0);
+  const currentTextSelection = currentRange.toString();
+
+  const allSentences = splitParagraphBySentences(currentParagraph.textContent)
+  const allSentencesObjs = []
+  var startIndex = 0
+  for (let i = 0; i < allSentences.length; i++) {
+    var sentence = allSentences[i]
+    var endIndex = startIndex + sentence.length
+    allSentencesObjs.push(new sentenceObject(startIndex, endIndex, sentence))
+    startIndex += sentence.length
+  }
+
+  // Get current & next sentence details
+  const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
   var nextSentence
-  // Case - Only fragment of sentence selected. Select the entire sentence.
-  if (currSentenceObj.sentence.length > currentTextSelection.length + MAX_LETTERS_MISSING_SELECTED_SENTENCE) {
+  if (isNewParagraphNode) {
+    // Case - New paragraph, use the first sentence.
+    nextSentence = allSentencesObjs[0]
+  } else if (currSentenceObj.sentence.length > currentTextSelection.length + MAX_LETTERS_MISSING_SELECTED_SENTENCE) {
+    // Case - Only fragment of sentence selected. Select the entire sentence.
     nextSentence = currSentenceObj
-  } else { // Case - select next sentence 
+  } else {
+    // Case - select next sentence 
     nxtSentenceIdx = allSentencesObjs.indexOf(currSentenceObj) + 1
     if (nxtSentenceIdx > allSentencesObjs.length) {
       // TODO - go to next <p> tag
@@ -56,8 +108,9 @@ function toggleCurrentAndNextSentence() {
 
   // create a new range for the next sentence
   const nextRange = document.createRange();
-  nextRange.setStart(currentRange.startContainer, nextSentence.startOffset);
-  nextRange.setEnd(currentRange.startContainer, nextSentence.endOffset);
+  // const nextRangeNode = isNewParagraphNode ? currentParagraph.firstChild : currentRange.startContainer
+  nextRange.setStart(currentParagraph.firstChild, nextSentence.startOffset);
+  nextRange.setEnd(currentParagraph.firstChild, nextSentence.endOffset);
 
   // select the new range
   currentSelection.removeAllRanges();
@@ -109,6 +162,12 @@ function splitParagraphBySentences(paragraph) {
 document.addEventListener('keydown', function(event) {
   if (event.code === 'Space') {
     event.preventDefault();
+  }
+});
+
+// Disable default space scrolling down the screen
+document.addEventListener('keyup', function(event) {
+  if (event.code === 'Space') {
     highlightSentence();
   }
 });
