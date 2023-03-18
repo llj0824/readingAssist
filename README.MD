@@ -50,6 +50,7 @@ We are excited to introduce our new feature that selects and highlights sentence
 
 
 ## Upcoming
-
-* Reshoot demo with scrolling down
+* option to enable vs disable in popup. Add a hotkey to enable and disable extension.
 * shift + space bar -> goes backwards.
+* option to highlight by paragraph or sentence.
+* Reshoot demo with scrolling down.
