@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Reading Assist",
+  "version": "1.0",
+  "description": "A Chrome extension that selects and highlights sentences as visual cues for digital reading.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "48": "appIcon.png"
+    }
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["main.js"]
+  }],
+  "icons": {
+    "48": "appIcon.png",
+    "128": "appIcon.png"
+  }
+}

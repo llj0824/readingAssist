@@ -25,3 +25,9 @@ Our team used **JavaScript** and **CSS** to create a custom user interface and l
 ---
 
 We are excited to introduce our new feature that selects and highlights sentences as visual cues for digital reading. **Try it now** and see how it can improve your reading experience.
+
+
+## Upcoming
+
+* Reshoot demo with scrolling down
+* shift + space bar -> goes backwards.
