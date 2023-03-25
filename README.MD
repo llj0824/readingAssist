@@ -51,6 +51,10 @@ We are excited to introduce our new feature that selects and highlights sentence
 
 ## Upcoming
 * option to enable vs disable in popup. Add a hotkey to enable and disable extension.
+* filter out sentences with just whitespace
 * shift + space bar -> goes backwards.
 * option to highlight by paragraph or sentence.
 * Reshoot demo with scrolling down.
+
+Bugs 
+* Reading lists <ol>/<ul>, <span>, hyperlinks
