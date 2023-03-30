@@ -55,10 +55,14 @@ function nextParagraph() {
   const currentTextSelection = currentRange.toString();
 
   // Keep transversing for next paragraph. Until no more
-  var nextElement = currentSelection.baseNode.parentNode.nextSibling
+  var nextElement = currentSelection.baseNode.parentNode.nextSibling;
   while (nextElement) {
-    var isParagraphNode = nextElement?.localName === 'p'
-    if (isParagraphNode) {
+    var isParagraphNode = nextElement?.localName === 'p';
+    var isSpanNode = nextElement?.localName === 'span';
+    var isLinkNode = nextElement?.localName === 'a';
+    var isEmNode = nextElement?.localName === 'em';
+
+    if (isParagraphNode || isSpanNode || isLinkNode || isEmNode) {
       // update current selection to be this node 
       var isNewParagraph = true
       return highlightNextSentence(nextElement, isNewParagraph)
