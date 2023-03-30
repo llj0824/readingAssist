@@ -18,8 +18,10 @@ function highlightSentence(currentDom) {
 
   // case 2: moving to next paragraph
   if (isEndOfParagraph()) {
+    debugger
     console.log("Going to next paragraph")
-    return nextParagraph()
+    nextParagraph()
+    return
   }
 
   // case 3 - increment to next sentence 
@@ -52,7 +54,7 @@ function nextParagraph() {
   // gets currentSelection, loops till next <p> tag, selects first sentence of that tag
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
-  const currentTextSelection = currentRange.toString();
+  const currentParagraph = currentRange.startContainer.parentNode;
 
   // Keep transversing for next paragraph. Until no more
   var nextElement = currentSelection.baseNode.parentNode.nextSibling;
@@ -61,8 +63,9 @@ function nextParagraph() {
     var isSpanNode = nextElement?.localName === 'span';
     var isLinkNode = nextElement?.localName === 'a';
     var isEmNode = nextElement?.localName === 'em';
+    var isDifferentNode = nextElement !== currentParagraph
 
-    if (isParagraphNode || isSpanNode || isLinkNode || isEmNode) {
+    if (isDifferentNode && (isParagraphNode || isSpanNode || isLinkNode || isEmNode)) {
       // update current selection to be this node 
       var isNewParagraph = true
       return highlightNextSentence(nextElement, isNewParagraph)
@@ -113,8 +116,8 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   // create a new range for the next sentence
   const nextRange = document.createRange();
   // const nextRangeNode = isNewParagraphNode ? currentParagraph.firstChild : currentRange.startContainer
-  nextRange.setStart(currentParagraph.firstChild, nextSentence.startOffset);
-  nextRange.setEnd(currentParagraph.firstChild, nextSentence.endOffset);
+  nextRange.setStart(findFirstTextNode(currentParagraph), nextSentence.startOffset);
+  nextRange.setEnd(findFirstTextNode(currentParagraph), nextSentence.endOffset);
 
   // scroll the screen down
   currentParagraph.scrollIntoView({
@@ -125,6 +128,20 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   // select the new range
   currentSelection.removeAllRanges();
   currentSelection.addRange(nextRange);
+}
+
+// Recursively search for the first text node in the given element or return an error
+function findFirstTextNode(element) {
+  if (!element) {
+    console.error("Could not find the first text node:", element);
+    return;
+  }
+
+  if (element.nodeType === Node.TEXT_NODE) {
+    return element;
+  }
+
+  return findFirstTextNode(element.firstChild);
 }
 
 function findCorrespondingSentence(allSentencesObjs, currentRange) {
