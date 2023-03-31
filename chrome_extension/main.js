@@ -9,19 +9,23 @@ function sentenceObject(startOffset, endOffset, sentence) {
 function highlightSentence(currentDom) {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
-  const currentParagraph = currentRange.startContainer.parentNode;
+  const currentContainer = currentRange.startContainer.parentNode;
+  const currentParagraph = isNestedParagraphTag(currentContainer) ? currentContainer.parentNode : currentContainer
+
   // case 1: initial load - nothing is selected
-  const isTextSelected = window.getSelection().type !== "None"
+  const isTextSelected = window.getSelection()
+    .type !== "None"
   if (!isTextSelected) {
     return
   }
 
   // case 2: moving to next paragraph
-  if (isEndOfParagraph()) {
+  if (isEndOfParagraph(currentParagraph)) {
     debugger
     console.log("Going to next paragraph")
-    nextParagraph()
-    return
+    var nextParagraphElement = nextParagraph(currentParagraph)
+    var isNewParagraphNode = true
+    return highlightNextSentence(nextParagraphElement, isNewParagraphNode)
   }
 
   // case 3 - increment to next sentence 
@@ -30,46 +34,45 @@ function highlightSentence(currentDom) {
   highlightNextSentence(currentParagraph, isNewParagraphNode)
 }
 
-function isEndOfParagraph() {
+function isEndOfParagraph(currentParagraph) {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
-  const currentParagraph = currentRange.startContainer.parentNode;
-  const allSentences = splitParagraphBySentences(currentParagraph.textContent)
-  const allSentencesObjs = []
-  var startIndex = 0
-  for (let i = 0; i < allSentences.length; i++) {
-    var sentence = allSentences[i]
-    var endIndex = startIndex + sentence.length
-    allSentencesObjs.push(new sentenceObject(startIndex, endIndex, sentence))
-    startIndex += sentence.length
-  }
 
-  // Get current & next sentence details
-  const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
-  const isLastSentence = (currSentenceObj === allSentencesObjs[allSentencesObjs.length - 1])
-  return isLastSentence
-}
-
-function nextParagraph() {
-  const currentSelection = window.getSelection();
-  const currentRange = currentSelection.getRangeAt(0);
-  const currentElement = currentRange.startContainer.parentNode;
-
-  // Find the next valid element (paragraph or span)
-  // case - if nested tag and final tag then move to next <p> tag
-
-  var isParagraphNode = (currentElement.localName === 'p');
-  const currentParagraph = isParagraphNode ? currentElement : currentElement.parentNode;
-  var nextElement = findNextSection(currentParagraph);
-
-  if (nextElement) {
-    var isNewParagraph = true;
-    return highlightNextSentence(nextElement, isNewParagraph);
+  if (isNestedParagraphTag(currentParagraph)) {
+    // note: current element is nested tag: <span>, <em>, or <a>
+    var currentElement = currentRange.startContainer.parentNode;
+    const lastChildNode = currentParagraph.childNodes[currentParagraph.childNodes.length - 1]
+    const isLastChildNode = currentElement == lastChildNode
+    return isLastChildNode
   } else {
-    console.log("No more paragraph nodes. Returning...");
-    return null;
+    // non-nested paragraph tag
+    // check if current selection is the last sentence of paragraph tag text.
+    const allSentencesObjs = splitParagraphBySentences(currentParagraph.textContent)
+
+    // Get current & next sentence details
+    const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
+    const isLastSentence = (currSentenceObj === allSentencesObjs[allSentencesObjs.length - 1])
+    return isLastSentence
   }
+  // default move on to next paragraph. 
+  return true
 }
+
+function nextParagraph(currentParagraph) {
+  const currentSelection = window.getSelection();
+  const currentRange = currentSelection.getRangeAt(0);
+
+  // case - nested <p> tag move to parent
+  var nextParagraph = currentParagraph.nextSibling
+  while (nextParagraph) {
+    if (isParagraphTag(nextParagraph)) {
+      return nextParagraph
+    }
+    nextParagraph = nextParagraph.nextSibling
+  }
+  return undefined
+}
+
 
 // Depth First Search for finding the next valid element (paragraph or span)
 function findNextSection(element) {
@@ -121,25 +124,17 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   const currentRange = currentSelection.getRangeAt(0);
   const currentTextSelection = currentRange.toString();
 
-  const allSentences = splitParagraphBySentences(currentParagraph.textContent)
-  const allSentencesObjs = []
-  var startIndex = 0
-  for (let i = 0; i < allSentences.length; i++) {
-    var sentence = allSentences[i]
-    var endIndex = startIndex + sentence.length
-    allSentencesObjs.push(new sentenceObject(startIndex, endIndex, sentence))
-    startIndex += sentence.length
-  }
-
+  const allSentencesObjs = splitParagraphBySentences(currentParagraph.textContent)
   // Get current & next sentence details
   const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
-  var nextSentence
+
+  var nextSentenceObj
   if (isNewParagraphNode) {
     // Case - New paragraph, use the first sentence.
-    nextSentence = allSentencesObjs[0]
+    nextSentenceObj = allSentencesObjs[0]
   } else if (currSentenceObj.sentence.length > currentTextSelection.length + MAX_LETTERS_MISSING_SELECTED_SENTENCE) {
     // Case - Only fragment of sentence selected. Select the entire sentence.
-    nextSentence = currSentenceObj
+    nextSentenceObj = currSentenceObj
   } else {
     // Case - select next sentence 
     nxtSentenceIdx = allSentencesObjs.indexOf(currSentenceObj) + 1
@@ -147,19 +142,22 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
       // TODO - go to next <p> tag
       Console.log("Going to next paragraph still in-development")
     }
-
-    nextSentence = allSentencesObjs[nxtSentenceIdx]
+    nextSentenceObj = allSentencesObjs[nxtSentenceIdx]
   }
+
 
   // create a new range for the next sentence
   const nextRange = document.createRange();
   if (isNestedParagraphTag(currentParagraph)) {
-    nextRange.setStart(findFirstTextNode(currentParagraph), nextSentence.startOffset);
-    nextRange.setEnd(findFirstTextNode(currentParagraph), nextSentence.endOffset);
+    // need to find corresponding start & end textNode for nextSentence
+    // it could span different nested tags
+    nextRange.setStart(findNestedParagraphStartingTextNode(currentParagraph, nextSentenceObj), nextSentenceObj
+      .startOffset);
+    nextRange.setEnd(findNestedParagraphEndingTextNode(currentParagraph, nextSentenceObj), nextSentenceObj.endOffset);
   } else {
     // Note: non-nested <p> tags first child is [text] node.
-    nextRange.setStart(currentParagraph.firstChild, nextSentence.startOffset);
-    nextRange.setEnd(currentParagraph.firstChild, nextSentence.endOffset);
+    nextRange.setStart(currentParagraph.firstChild, nextSentenceObj.startOffset);
+    nextRange.setEnd(currentParagraph.firstChild, nextSentenceObj.endOffset);
   }
 
   // scroll the screen down
@@ -174,21 +172,14 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   currentSelection.addRange(nextRange);
 }
 
-// Recursively search for the first text node in the given element or return an error
-function findFirstTextNode(element) {
-  if (!element) {
-    console.error("Could not find the first text node:", element);
-    return;
-  }
+// Find the text node of nested paragraph that corresponds with sentence.
+function findNestedParagraphStartingTextNode(nestedParagraph, sentenceObj) {
+  // find the nested children tag that contains begining of sentence
+  const beginingSentenceOffset = sentenceObj.startOffset
 
-  var isAnyNonWhiteSpaceCharacters = /\S/.test(element.textContent)
-  var isTextNode = (element.nodeType === Node.TEXT_NODE && isAnyNonWhiteSpaceCharacters);
+  // make a map of nested tag -> [begining, end] range
 
-  if (isTextNode) {
-    return element;
-  }
 
-  return findFirstTextNode(element.firstChild);
 }
 
 function isNestedParagraphTag(element) {
@@ -206,6 +197,10 @@ function isNestedParagraphTag(element) {
     }
   }
   return false
+}
+
+function isParagraphTag(currentElement) {
+  return currentElement.localName === 'p';
 }
 
 function findCorrespondingSentence(allSentencesObjs, currentRange) {
@@ -245,8 +240,21 @@ function splitParagraphBySentences(paragraph) {
     sentences.push(paragraph.slice(start));
   }
 
-  // Return the array of sentences
-  return sentences;
+  // Return the array of sentences objs.
+  const allSentencesObjs = []
+  var startIndex = 0
+  for (let i = 0; i < sentences.length; i++) {
+    var sentence = sentences[i]
+    var endIndex = startIndex + sentence.length
+    allSentencesObjs.push(new sentenceObject(startIndex, endIndex, sentence))
+    startIndex += sentence.length
+  }
+  return allSentencesObjs;
+}
+
+// similiarly get start/endOffset of each sentence
+function splitNestedTagIntoSentences() {
+  // return map<nestedTag, startOffset + endOffset of inner text>
 }
 
 // Disable default space scrolling down the screen
