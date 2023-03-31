@@ -51,33 +51,71 @@ function isEndOfParagraph() {
 }
 
 function nextParagraph() {
-  // gets currentSelection, loops till next <p> tag, selects first sentence of that tag
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
-  const currentParagraph = currentRange.startContainer.parentNode;
+  const currentElement = currentRange.startContainer.parentNode;
 
-  // Keep transversing for next paragraph. Until no more
-  var nextElement = currentSelection.baseNode.parentNode.nextSibling;
-  while (nextElement) {
-    var isParagraphNode = nextElement?.localName === 'p';
-    var isSpanNode = nextElement?.localName === 'span';
-    var isLinkNode = nextElement?.localName === 'a';
-    var isEmNode = nextElement?.localName === 'em';
-    var isDifferentNode = nextElement !== currentParagraph
+  // Find the next valid element (paragraph or span)
+  // case - if nested tag and final tag then move to next <p> tag
 
-    if (isDifferentNode && (isParagraphNode || isSpanNode || isLinkNode || isEmNode)) {
-      // update current selection to be this node 
-      var isNewParagraph = true
-      return highlightNextSentence(nextElement, isNewParagraph)
-    }
-    nextElement = nextElement.nextSibling
+  var isParagraphNode = (currentElement.localName === 'p');
+  const currentParagraph = isParagraphNode ? currentElement : currentElement.parentNode;
+  var nextElement = findNextSection(currentParagraph);
+
+  if (nextElement) {
+    var isNewParagraph = true;
+    return highlightNextSentence(nextElement, isNewParagraph);
+  } else {
+    console.log("No more paragraph nodes. Returning...");
+    return null;
   }
-  // reaching here means no more paragraph nodes
-  console.log("No more paragraph nodes. Returning...")
-  return
+}
+
+// Depth First Search for finding the next valid element (paragraph or span)
+function findNextSection(element) {
+  if (!element) return null;
+
+  if (!isNestedParagraphTag(element)) {
+    // case 1 - <p> to another <p> tag.
+    return element.nextSibling
+  } else {
+    // case 2 - nested text nodes inside <p> tag.
+    // go to next sibling or go to parent's next sibling.
+
+    let stack = [element];
+    // case 2 - going into <p> with nested tags <span>,<em>, <a>
+    while (stack.length > 0) {
+      element = stack.pop();
+
+      // Check if this is a text node with non-whitespace content,
+      // a <span> tag, an <a> tag, or an <em> tag.
+      var isAnyNonWhiteSpaceCharacters = /\S/.test(element.textContent)
+      var isTextNode = (element.nodeType === Node.TEXT_NODE && isAnyNonWhiteSpaceCharacters);
+      var isParagraphNode = (element.localName === 'p');
+      var isSpanNode = (element.localName === 'span');
+      var isLinkNode = (element.localName === 'a');
+      var isEmNode = (element.localName === 'em');
+
+      if (isParagraphNode || isTextNode || isSpanNode || isLinkNode || isEmNode) {
+        return findFirstTextNode(element);
+      }
+
+      if (element.nextSibling) {
+        // Try next sibling.
+        stack.push(element.nextSibling);
+      } else {
+        // Try parent node.
+        return findNextSection(element.parentNode)
+      }
+    }
+  }
+
+  // If we reached here, it means we couldn't find any valid elements.
+  return null;
 }
 
 // Given a paragraph html text node, selects the next sentence.
+// Note this should take nested <p> tag and non-nested <p> tag.
 function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
@@ -115,12 +153,18 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
 
   // create a new range for the next sentence
   const nextRange = document.createRange();
-  // const nextRangeNode = isNewParagraphNode ? currentParagraph.firstChild : currentRange.startContainer
-  nextRange.setStart(findFirstTextNode(currentParagraph), nextSentence.startOffset);
-  nextRange.setEnd(findFirstTextNode(currentParagraph), nextSentence.endOffset);
+  if (isNestedParagraphTag(currentParagraph)) {
+    nextRange.setStart(findFirstTextNode(currentParagraph), nextSentence.startOffset);
+    nextRange.setEnd(findFirstTextNode(currentParagraph), nextSentence.endOffset);
+  } else {
+    // Note: non-nested <p> tags first child is [text] node.
+    nextRange.setStart(currentParagraph.firstChild, nextSentence.startOffset);
+    nextRange.setEnd(currentParagraph.firstChild, nextSentence.endOffset);
+  }
 
   // scroll the screen down
-  currentParagraph.scrollIntoView({
+  const focusOnElement = nextRange.startContainer.parentNode;
+  focusOnElement.scrollIntoView({
     behavior: "smooth",
     block: "center"
   });
@@ -137,11 +181,31 @@ function findFirstTextNode(element) {
     return;
   }
 
-  if (element.nodeType === Node.TEXT_NODE) {
+  var isAnyNonWhiteSpaceCharacters = /\S/.test(element.textContent)
+  var isTextNode = (element.nodeType === Node.TEXT_NODE && isAnyNonWhiteSpaceCharacters);
+
+  if (isTextNode) {
     return element;
   }
 
   return findFirstTextNode(element.firstChild);
+}
+
+function isNestedParagraphTag(element) {
+  // checks if there are nested text elements inside paragraph tag
+  // Example - <p> <span> ... </span> <em> ... </em> <a> ... </a> </p> 
+  if (element.hasChildNodes()) {
+    for (let i = 0; i < element.childNodes.length; i++) {
+      const child = element.childNodes[i];
+      var isSpanNode = (child.localName === 'span');
+      var isLinkNode = (child.localName === 'a');
+      var isEmNode = (child.localName === 'em');
+      if (isSpanNode || isLinkNode || isEmNode) {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 function findCorrespondingSentence(allSentencesObjs, currentRange) {
