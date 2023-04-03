@@ -56,6 +56,6 @@ We are excited to introduce our new feature that selects and highlights sentence
 * option to highlight by paragraph or sentence.
 * Reshoot demo with scrolling down.
 
-* support reading pdfs | read.amazon.com
 Bugs 
-* Reading lists <ol>/<ul>, <span>, hyperlinks
+* Reading lists <ol>/<ul> and table <td>/<tr>?
+* support reading pdfs | read.amazon.com

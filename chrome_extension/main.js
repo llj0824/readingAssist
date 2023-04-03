@@ -43,6 +43,13 @@ function isEndOfParagraph(currentParagraph) {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
 
+  const allSentencesObjs = splitParagraphBySentences(currentParagraph.textContent)
+  const lastSentenceObj = allSentencesObjs[allSentencesObjs.length - 1]
+  const isEntireSentenceSelected = lastSentenceObj.sentence.trim() === currentRange.toString().trim()
+  if (!isEntireSentenceSelected) {
+    return false
+  }
+
   if (isNestedParagraphTag(currentParagraph)) {
     // case 1: current element is nested tag: <span>, <em>, or <a>
     var currentElement = currentRange.endContainer.parentNode;
@@ -53,11 +60,8 @@ function isEndOfParagraph(currentParagraph) {
   } else {
     // case 2: non-nested paragraph tag
     // check if current selection is the last sentence of paragraph tag text.
-    const allSentencesObjs = splitParagraphBySentences(currentParagraph.textContent)
-
-    // Get current & next sentence details
     const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
-    const isLastSentence = (currSentenceObj === allSentencesObjs[allSentencesObjs.length - 1])
+    const isLastSentence = (currSentenceObj === lastSentenceObj)
     return isLastSentence
   }
   // default case: move on to next paragraph. 
