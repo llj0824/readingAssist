@@ -280,7 +280,8 @@ function splitParagraphBySentences(paragraph) {
 
     // If the character is a period, exclamation point, or question mark,
     // add the sentence to the array and move the start index to the next character
-    if (char === '.' || char === '!' || char === '?') {
+    var isEndOfParagraph = (i == paragraph.length - 1)
+    if (char === '.' || char === '!' || char === '?' || isEndOfParagraph) {
       end = i;
       var sentence = paragraph.slice(start, end + 1);
       if (sentence.trim().length > 0) {
