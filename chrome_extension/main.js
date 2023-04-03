@@ -19,8 +19,8 @@ function highlightSentence(currentDom) {
   const currentParagraph = isNestedParagraphTag(currentContainer) ? currentContainer.parentNode : currentContainer
 
   // case 1: initial load - nothing is selected
-  const isTextSelected = window.getSelection().type !== "None"
   debugger;
+  const isTextSelected = window.getSelection().type !== "None"
   if (!isTextSelected) {
     return
   }
@@ -56,7 +56,7 @@ function isEndOfParagraph(currentParagraph) {
     const allSentencesObjs = splitParagraphBySentences(currentParagraph.textContent)
 
     // Get current & next sentence details
-    const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange, currentParagraph)
+    const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
     const isLastSentence = (currSentenceObj === allSentencesObjs[allSentencesObjs.length - 1])
     return isLastSentence
   }
@@ -88,7 +88,7 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
 
   const allSentencesObjs = splitParagraphBySentences(currentParagraph.textContent)
   // Get current & next sentence details
-  const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange, currentParagraph)
+  const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
 
   var nextSentenceObj
   if (isNewParagraphNode) {
@@ -244,23 +244,30 @@ function isParagraphTag(currentElement) {
   return currentElement.localName === 'p';
 }
 
-function findCorrespondingSentence(allSentencesObjs, currentRange, currentParagraph) {
+function findCorrespondingSentence(allSentencesObjs, currentRange) {
   const targetStartIndex = currentRange.startOffset
   const targetEndIndex = currentRange.endOffset
 
-  // nested paragraph tags - can span multiple tags
-  if (isNestedParagraphTag(currentParagraph)) {
-
-  } else {
-    for (let i = 0; i < allSentencesObjs.length; i++) {
-      sentenceObj = allSentencesObjs[i]
-      if (sentenceObj.startOffset <= targetStartIndex && sentenceObj.endOffset >= targetEndIndex) {
-        return sentenceObj
-      }
+  // case 1 - a full sentence is selected.
+  for (let i = 0; i < allSentencesObjs.length; i++) {
+    var sentenceObj = allSentencesObjs[i]
+    if (sentenceObj.sentence.trim() === currentRange.toString().trim()) {
+      return sentenceObj
     }
   }
+
+  // case 2 - only a subset of words are selected. 
+  // Note this will still break if selection is spans multiple tags...
+  for (let i = 0; i < allSentencesObjs.length; i++) {
+    sentenceObj = allSentencesObjs[i]
+    if (sentenceObj.startOffset <= targetStartIndex && sentenceObj.endOffset >= targetEndIndex) {
+      return sentenceObj
+    }
+  }
+
   return undefined
 }
+
 
 function splitParagraphBySentences(paragraph) {
   const sentences = [];
