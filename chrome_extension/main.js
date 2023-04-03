@@ -19,7 +19,6 @@ function highlightSentence(currentDom) {
   const currentParagraph = isNestedParagraphTag(currentContainer) ? currentContainer.parentNode : currentContainer
 
   // case 1: initial load - nothing is selected
-  debugger;
   const isTextSelected = window.getSelection().type !== "None"
   if (!isTextSelected) {
     return
@@ -105,8 +104,7 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
     // Case - select next sentence 
     nxtSentenceIdx = allSentencesObjs.indexOf(currSentenceObj) + 1
     if (nxtSentenceIdx > allSentencesObjs.length) {
-      // TODO - go to next <p> tag
-      Console.log("Going to next paragraph still in-development")
+      console.error("Going to next paragraph. This should've been handled elsewhere.")
     }
     nextSentenceObj = allSentencesObjs[nxtSentenceIdx]
   }
