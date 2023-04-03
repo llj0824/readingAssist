@@ -45,7 +45,7 @@ function isEndOfParagraph(currentParagraph) {
 
   if (isNestedParagraphTag(currentParagraph)) {
     // case 1: current element is nested tag: <span>, <em>, or <a>
-    var currentElement = currentRange.startContainer.parentNode;
+    var currentElement = currentRange.endContainer.parentNode;
     const lastChildNode = currentParagraph.childNodes[currentParagraph.childNodes.length - 1]
     const isLastChildNode = currentElement == lastChildNode
     // end is the last nested tag/child node.
@@ -282,15 +282,12 @@ function splitParagraphBySentences(paragraph) {
     // add the sentence to the array and move the start index to the next character
     if (char === '.' || char === '!' || char === '?') {
       end = i;
-      sentences.push(paragraph.slice(start, end + 1));
+      var sentence = paragraph.slice(start, end + 1);
+      if (sentence.trim().length > 0) {
+        sentences.push(sentence);
+      }
       start = i + 1;
     }
-  }
-
-  // If there's a sentence that ends with the last character of the paragraph,
-  // add it to the array as well
-  if (start < paragraph.length) {
-    sentences.push(paragraph.slice(start));
   }
 
   // Return the array of sentences objs.
