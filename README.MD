@@ -50,12 +50,12 @@ We are excited to introduce our new feature that selects and highlights sentence
 
 
 ## Upcoming
-* option to enable vs disable in popup. Add a hotkey to enable and disable extension.
-* filter out sentences with just whitespace
-* shift + space bar -> goes backwards.
-* option to highlight by paragraph or sentence.
-* Reshoot demo with scrolling down.
+- Option to enable vs disable in popup. Add a hotkey to enable and disable extension.
+- Filter out sentences with just whitespace.
+- Shift + Space bar -> goes backwards.
+- Option to highlight by paragraph or sentence.
+- Reshoot demo with scrolling down.
 
-Bugs 
-* Reading lists <ol>/<ul> and table <td>/<tr>?
-* support reading pdfs | read.amazon.com
+## Bugs 
+- Reading lists `<ol>`/`<ul>` and table `<td>`/`<tr>`?
+- Support reading PDFs | read.amazon.com
