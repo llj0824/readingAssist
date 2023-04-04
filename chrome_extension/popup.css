@@ -9,24 +9,22 @@ body {
 
 header {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly; /* Change to space-evenly for even spacing */
   align-items: center;
-  margin-bottom: 12px;
+  /*margin-bottom: 12px;*/
 }
 
 i {
   font-size: 32px;
   color: #a8d2e1;
-  margin-right: 10px;
 }
 
 h1 {
   font-size: 24px;
-  margin: 0;
 }
 
 hr {
-  border: 0;
+  border: none;
   height: 1px;
   background-image: linear-gradient(to right, rgba(168, 210, 225, 0.2), rgba(168, 210, 225, 0.75), rgba(168, 210, 225, 0.2));
   margin-bottom: 20px;
@@ -34,13 +32,12 @@ hr {
 
 p {
   font-size: 16px;
-  margin-bottom: 10px;
+  /*margin-bottom: 10px;*/
 }
 
 h2 {
-  font-size: 20px;
-  margin-bottom: 12px;
-  font-weight: bold;
+   font-weight:bold; /* Add bold styling to h2 */
+   margin-bottom:.5rem; 
 }
 
 #settings-container {
@@ -52,7 +49,18 @@ h2 {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+#toggle-wrapper {
+  display: flex;
+  /*align-items: center;*/
+  flex-direction:column;/* Update the flex-direction of toggle-wrapper */
+}
+
+#toggle-label {
+  /*margin-left: 10px;*/
+  font-size: 16px;
 }
 
 .switch {
@@ -106,9 +114,4 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-}
-
-#toggle-label {
-  margin-left: 10px;
-  font-size: 16px;
 }
