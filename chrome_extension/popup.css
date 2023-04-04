@@ -9,9 +9,8 @@ body {
 
 header {
   display: flex;
-  justify-content: space-evenly; /* Change to space-evenly for even spacing */
+  justify-content: space-evenly;
   align-items: center;
-  /*margin-bottom: 12px;*/
 }
 
 i {
@@ -32,17 +31,11 @@ hr {
 
 p {
   font-size: 16px;
-  /*margin-bottom: 10px;*/
 }
-
+  
 h2 {
-   font-weight:bold; /* Add bold styling to h2 */
+   font-weight:bold;
    margin-bottom:.5rem; 
-}
-
-#settings-container {
-  display: flex;
-  flex-direction: column;
 }
 
 #toggle-container {
@@ -52,14 +45,7 @@ h2 {
   margin-bottom: 10px;
 }
 
-#toggle-wrapper {
-  display: flex;
-  /*align-items: center;*/
-  flex-direction:column;/* Update the flex-direction of toggle-wrapper */
-}
-
 #toggle-label {
-  /*margin-left: 10px;*/
   font-size: 16px;
   margin-right: 15px;
 }
