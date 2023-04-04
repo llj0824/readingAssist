@@ -9,18 +9,27 @@ body {
 
 header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 12px;
-}
-
-h1 {
-  font-size: 24px;
 }
 
 i {
   font-size: 32px;
   color: #a8d2e1;
+  margin-right: 10px;
+}
+
+h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(168, 210, 225, 0.2), rgba(168, 210, 225, 0.75), rgba(168, 210, 225, 0.2));
+  margin-bottom: 20px;
 }
 
 p {
@@ -34,9 +43,14 @@ h2 {
   font-weight: bold;
 }
 
+#settings-container {
+  display: flex;
+  flex-direction: column;
+}
+
 #toggle-container {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 20px;
 }
