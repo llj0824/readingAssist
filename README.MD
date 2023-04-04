@@ -1,4 +1,4 @@
-# Introducing a Product for Seamless Reading using Visual Pointer Cue.
+# Chrome Extension for Seamless Reading using Visual Pointer Cue.
 
 Are you tired of scrolling through long digital documents or books and losing track of where you are? Do you ever find yourself re-reading the same sentence multiple times because you lost your spot?
 
@@ -9,7 +9,9 @@ We have a solution for you. We developed a **feature that selects and highlights
 
 To see our feature in action and better understand its benefits, watch our video demonstration. This demo showcases how our sentence selection and highlighting feature functions and how it can significantly improve your reading focus.
 
-By clicking on the image above or following this link, you can access our [video demo.](https://www.loom.com/share/81dff89c31a3483396274790a4988d42)
+By clicking on the image above or following this link, you can access our video demo: 
+
+https://www.loom.com/share/b17f9d891f3b408d8ff52fb7a2f81a45
 
 ## Usage
 
