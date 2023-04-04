@@ -347,17 +347,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.storage.sync.get(['isExtentionON'], result => {
   setExtensionOnOff(result.isExtentionON !== false);
 });
-
-// Change the popup label to "Enabled" or "Disabled" based on toggle
-document.addEventListener('DOMContentLoaded', function() {
-  var toggleBtn = document.getElementById('toggle-btn');
-  var toggleLabel = document.getElementById('toggle-label');
-
-  toggleBtn.addEventListener('change', function() {
-    if (toggleBtn.checked) {
-      toggleLabel.textContent = 'Extension Enabled';
-    } else {
-      toggleLabel.textContent = 'Extension Disabled';
-    }
-  });
-});

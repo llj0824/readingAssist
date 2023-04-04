@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="popup.css" />
     <script src="popup.js"></script>
   </head>
 
   <body>
-    <h1>Reading Assist</h1>
-    <p>A Chrome extension that selects and highlights sentences as visual cues for digital reading.</p>
-    <h1>Reading Assist Settings</h1>
+    <header>
+      <h1>Reading Assist</h1>
+      <i class="fa-solid fa-book-open-reader"></i>
+      <i class="fas fa-highlighter"></i>
+    </header>
+    <p>An extension that highlights sentences for an enhanced digital reading experience.</p>
+    <h2>Settings</h2>
     <div id="toggle-container">
-      <span id="toggle-label">Extension Disabled</span>
+      <!-- Label's text set in main.js -->
+      <span id="toggle-label">Extension Status: </span>
       <label class="switch">
         <input type="checkbox" id="toggle-btn">
         <span class="slider round"></span>
