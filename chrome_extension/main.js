@@ -12,7 +12,7 @@ function NodeObject(startOffset, endOffset, node) {
   this.node = node
 }
 
-function highlightSentence(currentDom) {
+function highlightSentence() {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
   const currentContainer = currentRange.startContainer.parentNode;
@@ -305,43 +305,45 @@ function splitParagraphBySentences(paragraph) {
   return allSentencesObjs;
 }
 
-// Disable default space scrolling down the screen
-document.addEventListener('keydown', function(event) {
-  const isTyping = document.activeElement.tagName === 'INPUT' ||
-    document.activeElement.tagName === 'TEXTAREA';
+// Event listener functions
+const onKeyDown = (event) => {
+  const isTyping =
+    document.activeElement.tagName === "INPUT" ||
+    document.activeElement.tagName === "TEXTAREA";
 
-  if (event.code === 'Space' && !isTyping) {
+  if (event.code === "Space" && !isTyping) {
+    // Disable default space scrolling down the screen
     event.preventDefault();
   }
-});
+};
 
-// Disable default space scrolling down the screen
-document.addEventListener('keyup', function(event) {
-  const isTyping = document.activeElement.tagName === 'INPUT' ||
-    document.activeElement.tagName === 'TEXTAREA';
+const onKeyUp = (event) => {
+  const isTyping =
+    document.activeElement.tagName === "INPUT" ||
+    document.activeElement.tagName === "TEXTAREA";
 
-  if (event.code === 'Space' && !isTyping) {
+  if (event.code === "Space" && !isTyping) {
     highlightSentence();
   }
-});
+};
 
-// list for when extension is on versus off
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.hasOwnProperty("isExtensionOn")) {
-    if (request.isExtensionOn) {
-      // Code here will execute when extension is turned ON.
-    } else {
-      // Code here will execute when extension is turned OFF.
-    }
-  }
-});
-
-// Get initial value of 'isExtentionON' on page load or refresh:
-chrome.storage.sync.get(['isExtentionON'], result => {
-
-  if (result.isExtentionON !== false) {
-    // Code here will execute when extenstion was already ON before page load/refresh 
+// Function to enable/disable functionality based on extension toggle state
+function setExtensionOnOff(isExtensionOn) {
+  if (isExtensionOn) {
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
   } else {
-    // Code here will execute when extenstion was already OFF before page load/refresh 
+    document.removeEventListener("keydown", onKeyDown);
+    document.removeEventListener("keyup", onKeyUp);
   }
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.hasOwnProperty('isExtensionOn')) {
+    setExtensionOnOff(request.isExtensionOn);
+  }
+});
+
+chrome.storage.sync.get(['isExtentionON'], result => {
+  setExtensionOnOff(result.isExtentionON !== false);
 });
