@@ -324,3 +324,24 @@ document.addEventListener('keyup', function(event) {
     highlightSentence();
   }
 });
+
+// list for when extension is on versus off
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.hasOwnProperty("isExtensionOn")) {
+    if (request.isExtensionOn) {
+      // Code here will execute when extension is turned ON.
+    } else {
+      // Code here will execute when extension is turned OFF.
+    }
+  }
+});
+
+// Get initial value of 'isExtentionON' on page load or refresh:
+chrome.storage.sync.get(['isExtentionON'], result => {
+
+  if (result.isExtentionON !== false) {
+    // Code here will execute when extenstion was already ON before page load/refresh 
+  } else {
+    // Code here will execute when extenstion was already OFF before page load/refresh 
+  }
+});
