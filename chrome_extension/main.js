@@ -49,22 +49,10 @@ function isEndOfParagraph(currentParagraph) {
     return false
   }
 
-  if (isNestedParagraphTag(currentParagraph)) {
-    // case 1: current element is nested tag: <span>, <em>, or <a>
-    var currentElement = currentRange.endContainer.parentNode;
-    const lastChildNode = currentParagraph.childNodes[currentParagraph.childNodes.length - 1]
-    const isLastChildNode = currentElement == lastChildNode
-    // end is the last nested tag/child node.
-    return isLastChildNode
-  } else {
-    // case 2: non-nested paragraph tag
-    // check if current selection is the last sentence of paragraph tag text.
-    const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
-    const isLastSentence = (currSentenceObj === lastSentenceObj)
-    return isLastSentence
-  }
-  // default case: move on to next paragraph. 
-  return true
+  // check if current selection is the last sentence of paragraph tag text.
+  const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
+  const isLastSentence = (currSentenceObj === lastSentenceObj)
+  return isLastSentence
 }
 
 function nextParagraph(currentParagraph) {
