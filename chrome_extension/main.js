@@ -347,3 +347,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.storage.sync.get(['isExtentionON'], result => {
   setExtensionOnOff(result.isExtentionON !== false);
 });
+
+// Turn off extension by default. Otherwise "space bar" doesn't work when typing.
+chrome.storage.sync.set({
+  isExtensionOn: false
+});

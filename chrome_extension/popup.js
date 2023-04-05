@@ -38,3 +38,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+chrome.tabs.onUpdated.addListener(() => {
+  // Update toggle button state when a tab is updated
+  chrome.storage.sync.get(['isExtensionOn'], (result) => {
+    toggleBtn.checked = result.isExtensionOn !== false;
+  });
+});
