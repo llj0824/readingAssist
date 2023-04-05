@@ -185,6 +185,7 @@ function mapOfNestedTagToStartEndCharacterOffsets(nestedParagraph) {
   const mapOfHtmlNodeToStartEndCharacterIndex = new Map();
   const allText = nestedParagraph.textContent;
 
+  // Recursively process child nodes.
   function processChildNodes(node, lastMatchedIndex) {
     for (let i = 0; i < node.childNodes.length; i++) {
       const child = node.childNodes[i];
@@ -194,7 +195,8 @@ function mapOfNestedTagToStartEndCharacterOffsets(nestedParagraph) {
         const startingIndexInParagraph = lastMatchedIndex;
         const endingIndex = startingIndexInParagraph + childText.length;
 
-        // Update the lastMatchedIndex to the next character after this match
+        // lastMatchedIndex is to prevent overlapping text in different child nodes
+        // from matching to same index in parent paragraph.
         lastMatchedIndex = endingIndex;
 
         mapOfHtmlNodeToStartEndCharacterIndex.set(child, {
