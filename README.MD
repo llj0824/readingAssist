@@ -65,3 +65,5 @@ We are excited to introduce our new feature that selects and highlights sentence
 ## Upcoming UI Changes
 - Revise extension name to emphasize visual highlighting & reading.
 - Change logo to emphasize visual highlighting & reading.
+- Change automatic scrolling of screen - it's disorienting right now
+- Selected text color - is it possible to make it a light hazy yellow color. Or bold/change sentence color.
