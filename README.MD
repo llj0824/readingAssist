@@ -4,6 +4,36 @@ Are you tired of scrolling through long digital documents or books and losing tr
 
 We have a solution for you. We developed a **feature that selects and highlights the current sentence being read** as a visual cue for readers. This feature enhances the reading experience by providing clear cues on the sentence you are currently reading, helping you to maintain focus and engagement with the content.
 
+## Empirical Studies on Impact of Visual Cues on Reading
+Notes on being better reader
+
+== text 1 ==
+ 
+Using a pointer or guide while reading helps direct the eyes across lines of text and maintain focus. This technique has been widely studied in various contexts to improve both reading speed and comprehension.
+
+A study by Huestegge et al. (2009) found that in second-grade children with low reading fluency levels, the use of a finger significantly reduced word skipping rates by 42% and regression rates (re-reading words) by 61%. 
+
+1. Schotter et al. (2014) found that using an external device like a pen stabilizes gaze position during reading and reduces backward movements called regressions—a frequent cause of inefficiency when reading. they found that using an external device like a pen could reduce the number of regressions (backward eye movements) during reading by approximately 10%
+
+2. Ben-Yehudah & Ahissar (2004) showed that using an external aid like a moving window or finger-reading could improve reading fluency for struggling readers such as adult dyslexics . Participants showed an increase in reading speed of 25% when using a moving window technique compared to when they read without any external aid. 
+
+3. Rayner et al.(2010): After six sessions of training with gaze-contingent display change technique participants reduced their number of saccadic regressions from about 4 regressions per sentence to about 2 regressions per sentence on average, leading to increased reading efficiency.
+
+4. Young and Bowers (1995): When comparing different guide techniques, college students reading with the card-guided method had an average reading speed of 297 words per minute (wpm), while those using the underline-guided technique read at an average speed of 278 wpm; both were faster than unguided reading, which had an average speed of 258 wpm.
+
+5. Begeny, J. C., Krouse, H. E., Ross, S. G., & Mitchell, R. C. (2009): Students who participated in the HELPS program showed an average increase of 38.5 words correct per minute (WCPM) compared to students who did not participate, who only improved by an average of 13.3 WCPM over a 12-week period.
+
+
+Using a pointer helps control the pace at which you read, making it easier to avoid subvocalization and supporting chunking as you focus on groups of words rather than individual words. By using a pointer, you provide your brain with a clear target for each fixation, effectively improving your reading speed and concentration. While these studies offer empirical evidence of improvements in reading speed and comprehension, it's important to note that individual results may vary depending on factors such as age, baseline skill level, learning disabilities, and consistency in practicing these techniques. Additionally, there is no one-size-fits-all solution; different strategies may be more effective for different people based on their unique circumstances and needs.
+
+
+References:
+- Schotter E.R., Tran R., & Rayner K. (2014). Don't believe what you read (only once): Comprehension is supported by regressions during reading. Psychological Science. https://library.ucsd.edu/dc/object/bb4916286v
+- Ben-Yehudah G., & Ahissar M. (2004). Sequential spatial frequency discrimination is consistently impaired among adult dyslexics. Vision Res. https://pubmed.ncbi.nlm.nih.gov/15031099/
+- Rayner K., Schotter E.R., Masson M.E.J., Potter M.C., & Treiman R. (2010). So Much to Read, So Little Time: How Do We Read, and Can Speed Reading Help? Psychological Science in the Public Interest.
+- Young, K., & Bowers, P. G. (1995). Reading speed as a function of two guide techniques for college students who are average in reading ability. Journal of College Reading and Learning.
+- Begeny, J. C., Krouse, H. E., Ross, S. G., & Mitchell, R. C. (2009). Increasing elementary-aged students' reading fluency with small-group interventions: A comparison of repeated reading, listening passage preview, and continuous reading strategies. Journal of Behavioral Education.
+
 ## Video Demo
 
 
