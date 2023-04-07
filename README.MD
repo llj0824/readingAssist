@@ -17,9 +17,9 @@ https://www.loom.com/share/b17f9d891f3b408d8ff52fb7a2f81a45
 
 Our feature is easy to use and seamlessly integrates with existing web applications. To select a sentence in an article, simply highlight a word or phrase, press **space bar**, and our feature will determine the current sentence based on cursor position and surrounding text. The chosen sentence will be highlighted in real-time as you scroll through the document.
 
-## Importing the Reading Assist Extension via "Load Unpacked"
+## Installing Reading Assist Chrome Extension
 
-This section explains how to import and test the Reading Assist extension from [https://github.com/llj0824/readingAssist](https://github.com/llj0824/readingAssist) in your browser using the "Load unpacked" option. We are pending Chrome Extension Store approval.
+This section explains how to install the Reading Assist extension. We are pending Chrome Extension Store approval.
 
 ### Step 1: Download the Code
 
@@ -30,7 +30,8 @@ This section explains how to import and test the Reading Assist extension from [
 
 ### Step 2: Install the Extension in Chrome
 
-Option 1: Install via Chrome Extension Store [pending approval]
+Option 1: 
+1. Install via Chrome Extension Store [pending approval]
 
 Option 2: 
 1. Open Google Chrome and go to `chrome://extensions/`.
@@ -40,7 +41,7 @@ Option 2:
 
 After completing these steps, you'll see the Reading Assist extension icon in the toolbar. You can click the icon to access its popup and interact with it while browsing websites.
 
-To uninstall or disable the extension, visit `chrome://extensions/`, find the Reading Assist extension, and either click "Remove" to uninstall or toggle off the switch to disable it temporarily.
+To uninstall visit `chrome://extensions/`, find the Reading Assist extension, and either click "Remove" to uninstall or toggle off the switch to disable it temporarily.
 
 ## Improved Accessibility
 
