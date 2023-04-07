@@ -28,8 +28,11 @@ This section explains how to import and test the Reading Assist extension from [
 3. In the dropdown menu, choose "Download ZIP".
 4. Extract the contents of the downloaded ZIP file to a folder on your computer.
 
-### Step 2: Load the Extension in Chrome
+### Step 2: Install the Extension in Chrome
 
+Option 1: Install via Chrome Extension Store [pending approval]
+
+Option 2: 
 1. Open Google Chrome and go to `chrome://extensions/`.
 2. Enable "Developer mode" using the toggle at the top-right corner of the page.
 3. Click "Load unpacked" and select the folder containing the extracted files from Step 1.
@@ -61,6 +64,7 @@ We are excited to introduce our new feature that selects and highlights sentence
 - Support reading PDFs | read.amazon.com
 - Reading lists `<ol>`/`<ul>` and table `<td>`/`<tr>`?
 - Add literature on visual pointer effect on reading comprehension and speed. 
+- Support decimals. Currently it mistakens decimal points as end of sentence.
 
 ## Upcoming UI Changes
 - Revise extension name to emphasize visual highlighting & reading.
