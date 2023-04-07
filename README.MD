@@ -26,9 +26,7 @@ References:
 - Begeny, J. C., Krouse, H. E., Ross, S. G., & Mitchell, R. C. (2009). Increasing elementary-aged students' reading fluency with small-group interventions: A comparison of repeated reading, listening passage preview, and continuous reading strategies. Journal of Behavioral Education. https://link.springer.com/article/10.1007/s10864-009-9090-9
 - Huestegge L., Radach R., & Corbic D., & Huestegge S.M.. (2009). Oculomotor and linguistic determinants of reading development: A longitudinal study. Vision Research. https://www.sciencedirect.com/science/article/pii/S0042698909004301
 
-
 ## Video Demo
-
 
 To see our feature in action and better understand its benefits, watch our video demonstration. This demo showcases how our sentence selection and highlighting feature functions and how it can significantly improve your reading focus.
 
@@ -65,19 +63,6 @@ Option 2:
 After completing these steps, you'll see the Reading Assist extension icon in the toolbar. You can click the icon to access its popup and interact with it while browsing websites.
 
 To uninstall visit `chrome://extensions/`, find the Reading Assist extension, and either click "Remove" to uninstall or toggle off the switch to disable it temporarily.
-
-## Improved Accessibility
-
-Our feature also improves accessibility for users with visual or learning disabilities by providing a clear and intuitive user interface. It is perfect for students, professionals, or anyone who wants to improve their digital reading experience.
-
-## Technology and Testing
-
-Our team used **JavaScript** and **CSS** to create a custom user interface and leveraged existing open-source libraries like `DOM Range` and `Selection` to handle text selection and highlight specific elements in the text. We have extensively tested and refined this feature to ensure that it provides optimal functionality and an enjoyable user experience.
-
----
-
-We are excited to introduce our new feature that selects and highlights sentences as visual cues for digital reading. **Try it now** and see how it can improve your reading experience.
-
 
 ## Upcoming Functionality
 - Shift + Space bar -> goes backwards.
