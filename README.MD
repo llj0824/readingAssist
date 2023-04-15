@@ -65,7 +65,6 @@ We are excited to introduce our new feature that selects and highlights sentence
 - Add literature on visual pointer effect on reading comprehension and speed. 
 - Support reading PDFs | read.amazon.com
 - Reading lists `<ol>`/`<ul>` and table `<td>`/`<tr>`?
-- Support decimals. Currently it mistakens decimal points as end of sentence.
 
 ## Upcoming UI Changes
 - Change automatic scrolling of screen - it can be disorienting right now
