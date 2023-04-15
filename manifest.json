@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Reading Assist",
-  "version": "1.0",
+  "version": "1.1",
   "description": "A Chrome extension that selects and highlights sentences as visual cues for digital reading.",
   "permissions": [
     "activeTab",
