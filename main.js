@@ -12,10 +12,19 @@ function NodeObject(startOffset, endOffset, node) {
   this.node = node
 }
 
+// Style element for highlighted text.
+const styleElement = document.createElement('style');
+styleElement.innerHTML = `
+  .highlighted-text {
+    font-weight: bold;
+  }
+`;
+document.head.appendChild(styleElement);
+
 function highlightSentence() {
   const currentSelection = window.getSelection();
   const currentRange = currentSelection.getRangeAt(0);
-  const currentContainer = currentRange.startContainer.parentNode;
+  const currentContainer = currentRange.startContainer;
   const currentParagraph = findParagraphTag(currentContainer)
 
   // case 1: initial load - nothing is selected
@@ -77,6 +86,9 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   const currentRange = currentSelection.getRangeAt(0);
   const currentTextSelection = currentRange.toString();
 
+  // Remove style from previous sentence if any
+  removeStyleFromRange(currentRange);
+
   const allSentencesObjs = splitParagraphBySentences(currentParagraph.textContent)
   // Get current & next sentence details
   const currSentenceObj = findCorrespondingSentence(allSentencesObjs, currentRange)
@@ -126,6 +138,45 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
   // select the new range
   currentSelection.removeAllRanges();
   currentSelection.addRange(nextRange);
+
+  // Apply bold and light red style on selected element
+  applyStyleToRange(nextRange);
+}
+
+function applyStyleToRange(range) {
+  const el = document.createElement("span");
+  el.classList.add("highlighted-text");
+
+  try {
+    el.appendChild(range.extractContents());
+    range.insertNode(el);
+    // Normalize the text nodes after applying styles
+    el.parentNode.normalize();
+  } catch (e) {
+    console.error("Error while applying styles:", e);
+  }
+}
+
+function removeStyleFromRange(range) {
+  const currentParagraph = findParagraphTag(range.startContainer);
+  const spanEl = findHighlightSpanTag(currentParagraph)
+
+  if (spanEl && spanEl.classList.contains('highlighted-text')) {
+    range.selectNodeContents(spanEl);
+
+    try {
+      const content = range.extractContents();
+      range.deleteContents();
+      spanEl.remove();
+      range.insertNode(content);
+
+      // Normalize the text nodes after removing styles
+      content.parentNode.normalize();
+
+    } catch (e) {
+      console.error("Error while removing styles:", e);
+    }
+  }
 }
 
 // Find the text node of nested paragraph that corresponds with sentence.
@@ -256,6 +307,30 @@ function findEmbeddedTextNode(currentElement) {
 
     if (foundTextNode) {
       return foundTextNode;
+    }
+  }
+
+  // If no text node is found, return null
+  return null;
+}
+
+function findHighlightSpanTag(currentElement) {
+  function isHighlightSpanTag(currentElem) {
+    return currentElem && currentElem?.classList?.contains('highlighted-text');
+  }
+
+  // Check if the current element itself is a text node
+  if (isHighlightSpanTag(currentElement)) {
+    return currentElement;
+  }
+
+  // Loop through child nodes and search for text nodes recursively
+  for (let i = 0; i < currentElement.childNodes.length; i++) {
+    const childNode = currentElement.childNodes[i];
+    const foundHighlightSpanNode = findHighlightSpanTag(childNode);
+
+    if (foundHighlightSpanNode) {
+      return foundHighlightSpanNode;
     }
   }
 
