@@ -19,42 +19,25 @@ Our feature is easy to use and seamlessly integrates with existing web applicati
 
 ## Installing Reading Assist Chrome Extension
 
-This section explains how to install the Reading Assist extension. We are pending Chrome Extension Store approval.
+This section explains how to install the Reading Assist extension. 
 
-### Step 1: Download the Code
+### [Recommended] Option 1: Install via Chrome Extension Store
+1. Install via Chrome Extension Store - [link](https://chrome.google.com/webstore/detail/reading-assist/mdpcpdnelomalncmjbdcnledmmfepkco).
 
-1. Visit [https://github.com/llj0824/readingAssist](https://github.com/llj0824/readingAssist).
+### Option 2: Github load unpacked extension
+
+1. Visit [github repo](https://github.com/llj0824/readingAssist).
 2. Click the green "Code" button.
 3. In the dropdown menu, choose "Download ZIP".
 4. Extract the contents of the downloaded ZIP file to a folder on your computer.
+5. Open Google Chrome and go to `chrome://extensions/`.
+6. Enable "Developer mode" using the toggle at the top-right corner of the page.
+7. Click "Load unpacked" and select the folder containing the extracted files from Step 1.
+8. The Reading Assist extension should now be installed and appear in the list of extensions.
 
-### Step 2: Install the Extension in Chrome
-
-Option 1: 
-1. Install via Chrome Extension Store [pending approval]
-
-Option 2: 
-1. Open Google Chrome and go to `chrome://extensions/`.
-2. Enable "Developer mode" using the toggle at the top-right corner of the page.
-3. Click "Load unpacked" and select the folder containing the extracted files from Step 1.
-4. The Reading Assist extension should now be installed and appear in the list of extensions.
-
-After completing these steps, you'll see the Reading Assist extension icon in the toolbar. You can click the icon to access its popup and interact with it while browsing websites.
+## Uninstalling/Disabling Reading Assist Chrome Extension
 
 To uninstall visit `chrome://extensions/`, find the Reading Assist extension, and either click "Remove" to uninstall or toggle off the switch to disable it temporarily.
-
-## Improved Accessibility
-
-Our feature also improves accessibility for users with visual or learning disabilities by providing a clear and intuitive user interface. It is perfect for students, professionals, or anyone who wants to improve their digital reading experience.
-
-## Technology and Testing
-
-Our team used **JavaScript** and **CSS** to create a custom user interface and leveraged existing open-source libraries like `DOM Range` and `Selection` to handle text selection and highlight specific elements in the text. We have extensively tested and refined this feature to ensure that it provides optimal functionality and an enjoyable user experience.
-
----
-
-We are excited to introduce our new feature that selects and highlights sentences as visual cues for digital reading. **Try it now** and see how it can improve your reading experience.
-
 
 ## Upcoming Functionality
 - Shift + Space bar -> goes backwards.
