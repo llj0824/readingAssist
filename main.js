@@ -347,6 +347,7 @@ const onKeyUp = (event) => {
 // Function to enable/disable functionality based on extension toggle state
 function setExtensionOnOff(isExtensionOn) {
   if (isExtensionOn) {
+    console.warn("Disabling space bar default behaviors")
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("keyup", onKeyUp);
   } else {
@@ -355,6 +356,11 @@ function setExtensionOnOff(isExtensionOn) {
   }
 }
 
+// Turn off extension by default. Otherwise "space bar" doesn't work when typing.
+chrome.storage.sync.set({
+  isExtensionOn: false
+});
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.hasOwnProperty('isExtensionOn')) {
     setExtensionOnOff(request.isExtensionOn);
@@ -362,10 +368,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 chrome.storage.sync.get(['isExtentionON'], result => {
-  setExtensionOnOff(result.isExtentionON !== false);
-});
-
-// Turn off extension by default. Otherwise "space bar" doesn't work when typing.
-chrome.storage.sync.set({
-  isExtensionOn: false
+  setExtensionOnOff(result.isExtentionON);
 });
