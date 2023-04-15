@@ -59,14 +59,13 @@ We are excited to introduce our new feature that selects and highlights sentence
 ## Upcoming Functionality
 - Shift + Space bar -> goes backwards.
 - Option to highlight by paragraph or sentence.
-- Allow users to change highlight color.
+- Allow users to customize highlight color.
 
 ## Upcoming Support
+- Add literature on visual pointer effect on reading comprehension and speed. 
 - Support reading PDFs | read.amazon.com
 - Reading lists `<ol>`/`<ul>` and table `<td>`/`<tr>`?
-- Add literature on visual pointer effect on reading comprehension and speed. 
 - Support decimals. Currently it mistakens decimal points as end of sentence.
 
 ## Upcoming UI Changes
-- Change automatic scrolling of screen - it's disorienting right now
-- Selected text color - is it possible to make it a light hazy yellow color. Or bold/change sentence color.
+- Change automatic scrolling of screen - it can be disorienting right now
