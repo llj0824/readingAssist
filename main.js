@@ -347,7 +347,7 @@ const onKeyUp = (event) => {
 // Function to enable/disable functionality based on extension toggle state
 function setExtensionOnOff(isExtensionOn) {
   if (isExtensionOn) {
-    console.warn("Disabling space bar default behaviors")
+    console.log("Disabling space bar default behaviors")
     document.addEventListener("keydown", onKeyDown);
     document.addEventListener("keyup", onKeyUp);
   } else {
