@@ -21,7 +21,7 @@ Our feature is easy to use and seamlessly integrates with existing web applicati
 
 This section explains how to install the Reading Assist extension. 
 
-### [Recommended] Option 1: Install via Chrome Extension Store
+### Option 1: Install via Chrome Extension Store [Recommended]
 1. Install via Chrome Extension Store - [link](https://chrome.google.com/webstore/detail/reading-assist/mdpcpdnelomalncmjbdcnledmmfepkco).
 
 ### Option 2: Github load unpacked extension
