@@ -373,9 +373,12 @@ function splitParagraphBySentences(paragraph) {
     const char = paragraph.charAt(i);
 
     // If the character is a period, exclamation point, or question mark,
-    // add the sentence to the array and move the start index to the next character
-    var isEndOfParagraph = (i == paragraph.length - 1)
-    if (char === '.' || char === '!' || char === '?' || isEndOfParagraph) {
+    // add the sentence to the array and move the start index to the next character.
+    // meake sure it's not part of a decimal number.
+    var isEndOfParagraph = (i == paragraph.length - 1);
+    var isNotDecimal = isNaN(paragraph.charAt(i - 1)) || isNaN(paragraph.charAt(i + 1));
+
+    if ((char === '.' || char === '!' || char === '?' || isEndOfParagraph) && isNotDecimal) {
       end = i;
       var sentence = paragraph.slice(start, end + 1);
       if (sentence.trim().length > 0) {
