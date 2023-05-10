@@ -1,3 +1,6 @@
+# Usage Demo
+![Usage Instructions](usage_instructions.gif)
+
 # Chrome Extension for Seamless Reading using Visual Pointer Cue.
 
 Are you tired of scrolling through long digital documents or books and losing track of where you are? Do you ever find yourself re-reading the same sentence multiple times because you lost your spot?
