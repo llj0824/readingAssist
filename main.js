@@ -16,18 +16,10 @@ function NodeObject(startOffset, endOffset, node) {
 const styleElement = document.createElement('style');
 styleElement.innerHTML = `
   .reading-assist-highlight {
-    background-color: rgba(255, 235, 59, 0.5) !important;
-    font-weight: bold !important;
-    border-radius: 2px;
-    box-shadow: 0 0 0 2px rgba(255, 235, 59, 0.3);
-    transition: all 0.2s ease;
-  }
-  
-  /* Remove highlight from all text nodes */
-  .reading-assist-clear * {
-    background-color: transparent !important;
-    font-weight: inherit !important;
-    box-shadow: none !important;
+    background-color: rgba(100, 149, 237, 0.15) !important;
+    border-bottom: 2px solid rgba(100, 149, 237, 0.5) !important;
+    padding-bottom: 1px;
+    transition: all 0.3s ease;
   }
 `;
 document.head.appendChild(styleElement);
@@ -219,7 +211,7 @@ function applyStyleToRange(range) {
     // Apply highlight class to parent elements of text nodes
     textNodes.forEach(node => {
       const parent = node.parentElement;
-      if (parent) {
+      if (parent && !parent.classList.contains('reading-assist-highlight')) {
         parent.classList.add('reading-assist-highlight');
       }
     });
@@ -256,6 +248,7 @@ function getTextNodesInRange(range) {
 
 // Clear all highlights in the document
 function clearAllHighlights() {
+  // Simply remove the highlight class from all elements
   document.querySelectorAll('.reading-assist-highlight').forEach(el => {
     el.classList.remove('reading-assist-highlight');
   });
