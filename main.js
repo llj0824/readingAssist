@@ -205,16 +205,21 @@ function applyStyleToRange(range) {
     // Clear any existing highlights first
     clearAllHighlights();
     
-    // Get all text nodes in the range
-    const textNodes = getTextNodesInRange(range);
+    // DO NOT MODIFY THE DOM! This breaks navigation.
+    // Instead, apply highlighting to existing elements without changing structure
     
-    // Apply highlight class to parent elements of text nodes
-    textNodes.forEach(node => {
-      const parent = node.parentElement;
-      if (parent && !parent.classList.contains('reading-assist-highlight')) {
-        parent.classList.add('reading-assist-highlight');
-      }
-    });
+    // Get the container element
+    const container = range.commonAncestorContainer;
+    const parentElement = container.nodeType === Node.TEXT_NODE ? 
+      container.parentElement : container;
+    
+    // Mark this element as containing the highlighted sentence
+    if (parentElement) {
+      parentElement.classList.add('reading-assist-highlight');
+      
+      // Store the range text so we can style just that portion
+      parentElement.setAttribute('data-highlight-text', range.toString());
+    }
   } catch (e) {
     console.error("Error while applying styles:", e);
   }
@@ -248,9 +253,10 @@ function getTextNodesInRange(range) {
 
 // Clear all highlights in the document
 function clearAllHighlights() {
-  // Simply remove the highlight class from all elements
+  // DO NOT MODIFY DOM STRUCTURE! Just remove classes and attributes
   document.querySelectorAll('.reading-assist-highlight').forEach(el => {
     el.classList.remove('reading-assist-highlight');
+    el.removeAttribute('data-highlight-text');
   });
 }
 
