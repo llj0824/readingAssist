@@ -15,8 +15,19 @@ function NodeObject(startOffset, endOffset, node) {
 // Style element for highlighted text.
 const styleElement = document.createElement('style');
 styleElement.innerHTML = `
-  .highlighted-text {
-    font-weight: bold;
+  .reading-assist-highlight {
+    background-color: rgba(255, 235, 59, 0.5) !important;
+    font-weight: bold !important;
+    border-radius: 2px;
+    box-shadow: 0 0 0 2px rgba(255, 235, 59, 0.3);
+    transition: all 0.2s ease;
+  }
+  
+  /* Remove highlight from all text nodes */
+  .reading-assist-clear * {
+    background-color: transparent !important;
+    font-weight: inherit !important;
+    box-shadow: none !important;
   }
 `;
 document.head.appendChild(styleElement);
@@ -144,39 +155,61 @@ function highlightNextSentence(currentParagraph, isNewParagraphNode) {
 }
 
 function applyStyleToRange(range) {
-  const el = document.createElement("span");
-  el.classList.add("highlighted-text");
-
   try {
-    el.appendChild(range.extractContents());
-    range.insertNode(el);
-    // Normalize the text nodes after applying styles
-    el.parentNode.normalize();
+    // Clear any existing highlights first
+    clearAllHighlights();
+    
+    // Get all text nodes in the range
+    const textNodes = getTextNodesInRange(range);
+    
+    // Apply highlight class to parent elements of text nodes
+    textNodes.forEach(node => {
+      const parent = node.parentElement;
+      if (parent) {
+        parent.classList.add('reading-assist-highlight');
+      }
+    });
   } catch (e) {
     console.error("Error while applying styles:", e);
   }
 }
 
-function removeStyleFromRange(range) {
-  const currentParagraph = findParagraphTag(range.startContainer);
-  const spanEl = findHighlightSpanTag(currentParagraph)
-
-  if (spanEl && spanEl.classList.contains('highlighted-text')) {
-    range.selectNodeContents(spanEl);
-
-    try {
-      const content = range.extractContents();
-      range.deleteContents();
-      spanEl.remove();
-      range.insertNode(content);
-
-      // Normalize the text nodes after removing styles
-      content.parentNode.normalize();
-
-    } catch (e) {
-      console.error("Error while removing styles:", e);
+// Helper function to get all text nodes within a range
+function getTextNodesInRange(range) {
+  const textNodes = [];
+  const container = range.commonAncestorContainer;
+  
+  function collectTextNodes(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      // Check if this text node is within our range
+      const nodeRange = document.createRange();
+      nodeRange.selectNodeContents(node);
+      
+      if (range.compareBoundaryPoints(Range.START_TO_END, nodeRange) >= 0 &&
+          range.compareBoundaryPoints(Range.END_TO_START, nodeRange) <= 0) {
+        textNodes.push(node);
+      }
+    } else {
+      for (let child of node.childNodes) {
+        collectTextNodes(child);
+      }
     }
   }
+  
+  collectTextNodes(container);
+  return textNodes;
+}
+
+// Clear all highlights in the document
+function clearAllHighlights() {
+  document.querySelectorAll('.reading-assist-highlight').forEach(el => {
+    el.classList.remove('reading-assist-highlight');
+  });
+}
+
+function removeStyleFromRange(range) {
+  // Simply clear all highlights - much simpler and safer
+  clearAllHighlights();
 }
 
 // Find the text node of nested paragraph that corresponds with sentence.
@@ -275,18 +308,21 @@ function isNestedParagraphTag(element) {
 }
 
 function isParagraphTag(currentElement) {
-  return currentElement.localName === 'p';
+  // Support common text containers, not just <p> tags
+  const textContainers = ['p', 'div', 'article', 'section', 'span', 'li', 'td', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+  return textContainers.includes(currentElement.localName);
 }
 
 function isTextNode(currentElement) {
   return currentElement.nodeType === Node.TEXT_NODE
 }
 
-// Keep searching for paragraph tag by moving up DOM tree.
+// Keep searching for text container by moving up DOM tree.
 function findParagraphTag(currentContainer) {
   var currElement = currentContainer
   while (currElement) {
-    if (isParagraphTag(currElement)) {
+    // Check if it's a valid text container AND has substantial text content
+    if (isParagraphTag(currElement) && currElement.textContent.trim().length > 20) {
       return currElement
     }
     currElement = currElement.parentNode
@@ -314,29 +350,7 @@ function findEmbeddedTextNode(currentElement) {
   return null;
 }
 
-function findHighlightSpanTag(currentElement) {
-  function isHighlightSpanTag(currentElem) {
-    return currentElem && currentElem?.classList?.contains('highlighted-text');
-  }
-
-  // Check if the current element itself is a text node
-  if (isHighlightSpanTag(currentElement)) {
-    return currentElement;
-  }
-
-  // Loop through child nodes and search for text nodes recursively
-  for (let i = 0; i < currentElement.childNodes.length; i++) {
-    const childNode = currentElement.childNodes[i];
-    const foundHighlightSpanNode = findHighlightSpanTag(childNode);
-
-    if (foundHighlightSpanNode) {
-      return foundHighlightSpanNode;
-    }
-  }
-
-  // If no text node is found, return null
-  return null;
-}
+// This function is no longer needed with the new CSS-based approach
 
 function findCorrespondingSentence(allSentencesObjs, currentRange) {
   const targetStartIndex = currentRange.startOffset
@@ -364,38 +378,57 @@ function findCorrespondingSentence(allSentencesObjs, currentRange) {
 
 
 function splitParagraphBySentences(paragraph) {
+  // Common abbreviations to avoid splitting on
+  const abbreviations = ['Dr.', 'Mr.', 'Mrs.', 'Ms.', 'Prof.', 'Sr.', 'Jr.', 'Ph.D', 'M.D', 'B.A', 'M.A', 'B.S', 'M.S', 
+                        'i.e.', 'e.g.', 'etc.', 'vs.', 'Inc.', 'Ltd.', 'Co.', 'Corp.', 'U.S.', 'U.K.'];
+  
+  // First, protect abbreviations by replacing their dots temporarily
+  let protectedText = paragraph;
+  abbreviations.forEach(abbr => {
+    protectedText = protectedText.replace(new RegExp(abbr.replace('.', '\\.'), 'g'), abbr.replace(/\./g, '$$DOT$$'));
+  });
+  
+  // Also protect decimal numbers and URLs
+  protectedText = protectedText.replace(/(\d)\.(\d)/g, '$1$$DOT$$$2');
+  protectedText = protectedText.replace(/(https?:\/\/[^\s]+)/g, (match) => match.replace(/\./g, '$$DOT$$'));
+  
   const sentences = [];
   let start = 0;
-  let end = 0;
-
-  // Loop through each character in the paragraph
-  for (let i = 0; i < paragraph.length; i++) {
-    const char = paragraph.charAt(i);
-
-    // If the character is a period, exclamation point, or question mark,
-    // add the sentence to the array and move the start index to the next character.
-    // meake sure it's not part of a decimal number.
-    var isEndOfParagraph = (i == paragraph.length - 1);
-    var isNotDecimal = isNaN(paragraph.charAt(i - 1)) || isNaN(paragraph.charAt(i + 1));
-
-    if ((char === '.' || char === '!' || char === '?' || isEndOfParagraph) && isNotDecimal) {
-      end = i;
-      var sentence = paragraph.slice(start, end + 1);
-      if (sentence.trim().length > 0) {
-        sentences.push(sentence);
-      }
-      start = i + 1;
+  
+  // Split on sentence endings followed by space and capital letter (or end of text)
+  const sentenceEndings = /([.!?])\s+(?=[A-Z])|([.!?])$/g;
+  let match;
+  
+  while ((match = sentenceEndings.exec(protectedText)) !== null) {
+    let end = match.index + match[1].length;
+    let sentence = protectedText.slice(start, end);
+    
+    // Restore protected dots
+    sentence = sentence.replace(/\$\$DOT\$\$/g, '.');
+    
+    if (sentence.trim().length > 0) {
+      sentences.push(sentence);
+    }
+    start = end;
+  }
+  
+  // Don't forget the last sentence if text doesn't end with punctuation
+  if (start < protectedText.length) {
+    let sentence = protectedText.slice(start);
+    sentence = sentence.replace(/\$\$DOT\$\$/g, '.');
+    if (sentence.trim().length > 0) {
+      sentences.push(sentence);
     }
   }
-
-  // Return the array of sentences objs.
-  const allSentencesObjs = []
-  var startIndex = 0
+  
+  // Return the array of sentence objects
+  const allSentencesObjs = [];
+  let startIndex = 0;
   for (let i = 0; i < sentences.length; i++) {
-    var sentence = sentences[i]
-    var endIndex = startIndex + sentence.length
-    allSentencesObjs.push(new sentenceObject(startIndex, endIndex, sentence))
-    startIndex += sentence.length
+    const sentence = sentences[i];
+    const endIndex = startIndex + sentence.length;
+    allSentencesObjs.push(new sentenceObject(startIndex, endIndex, sentence));
+    startIndex += sentence.length;
   }
   return allSentencesObjs;
 }
